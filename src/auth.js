@@ -1,34 +1,35 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-
+const adminList = ['Irisval', 'RetaxMaster', 'freddier'];
 const AuthContext = React.createContext();
 
 function AuthProvider({ children }) {
-  const navigate = useNavigate();
-  const [user, setUser] = React.useState(null);
+    const navigate = useNavigate();
+    const [user, setUser] = React.useState(null);
 
-  const login = ({ username }) => {
-    setUser({ username });
-    navigate('/profile');
-  };
-  
-  const logout = () => {
-    setUser(null);
-    navigate('/');
-  };
-  
-  const auth = { user, login, logout };
+    const login = ({ username }) => {
+        const isAdmin = adminList.find(admin => admin === username);
+        setUser({ username, isAdmin });
+        navigate('/profile');
+    };
 
-  return (
-    <AuthContext.Provider value={auth}>
-      {children}
-    </AuthContext.Provider>
-  );
+    const logout = () => {
+        setUser(null);
+        navigate('/');
+    };
+
+    const auth = { user, login, logout };
+
+    return (
+        <AuthContext.Provider value={auth}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 function useAuth() {
-  const auth = React.useContext(AuthContext);
-  return auth;
+    const auth = React.useContext(AuthContext);
+    return auth;
 }
 
 function AuthRoute(props) {
@@ -40,7 +41,7 @@ function AuthRoute(props) {
     return props.children;
 }
 export {
-  AuthProvider,
-  useAuth,
-  AuthRoute,
+    AuthProvider,
+    useAuth,
+    AuthRoute,
 };
